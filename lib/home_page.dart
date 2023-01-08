@@ -38,8 +38,8 @@ class _HomePageState extends State<HomePage> {
         "https://ayat-app.com/public/uploads/all/Xtdm4MdXtJVf5feL7rS5yquq18mnpceOEMPpJvGb.mp3"
   ];
   AudioPlayer audioPlayer = AudioPlayer();
-  Duration _duration = Duration();
-  Duration _postion = Duration();
+  Duration duration = Duration();
+  Duration postion = Duration();
   String url =
       "https://ayat-app.com/public/uploads/all/Xtdm4MdXtJVf5feL7rS5yquq18mnpceOEMPpJvGb.mp3";
 
@@ -50,19 +50,19 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     audioPlayer.onDurationChanged.listen((event) {
       setState(() {
-        _duration = event;
+        duration = event;
       });
     });
     audioPlayer.onPositionChanged.listen((event) {
       setState(() {
-        _postion = event;
+        postion = event;
       });
     });
     audioPlayer.setSourceUrl(url);
 
     this.audioPlayer.onDurationChanged.listen((d) {
       setState(() {
-        _duration = d;
+        duration = d;
       });
     });
   }
@@ -108,6 +108,7 @@ class _HomePageState extends State<HomePage> {
               ),
               Center(
                 child: Container(
+                  padding: EdgeInsets.all(8),
                   height: height * 0.2,
                   width: weight * 0.82,
                   decoration: BoxDecoration(
@@ -117,31 +118,29 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Text(
-                            "00.00",
+                            "${postion.inMinutes}:${postion.inSeconds % 60}",
                             style: TextStyle(color: Colors.blue),
                           ),
                           Container(
                             width: 240,
-                            child: Slider.adaptive(
-                              onChangeEnd: (new_value) async {
-                                setState(() {
-                                  value = new_value;
-                                  print(new_value);
-                                });
-                                await audioPlayer
-                                    .seek(Duration(seconds: new_value.toInt()));
-                              },
+                            child: Slider(
                               min: 0,
-                              max: _duration.inSeconds.toDouble(),
-                              value: value,
-                              onChanged: (value) {},
+                              max: duration.inSeconds.toDouble(),
+                              value: postion.inSeconds.toDouble(),
+                              onChanged: (value) {
+                                final position =
+                                    Duration(seconds: value.toInt());
+                                audioPlayer.seek(position);
+                                audioPlayer.resume();
+                              },
                               activeColor: Colors.white,
                             ),
                           ),
                           Text(
-                            "${_duration.inMinutes}:${_duration.inSeconds % 60}",
+                            "${duration.inMinutes}:${duration.inSeconds % 60}",
                             style: TextStyle(color: Colors.blue),
                           ),
                         ],
@@ -273,7 +272,7 @@ class _HomePageState extends State<HomePage> {
                                   value = position.inSeconds.toDouble();
                                 });
                               });
-                              _duration = (await audioPlayer.getDuration())!;
+                              duration = (await audioPlayer.getDuration())!;
                               // setState(() async {
                               //   _duration = (await audioPlayer.getDuration())!;
                               // });
