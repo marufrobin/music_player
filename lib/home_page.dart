@@ -393,6 +393,7 @@ class _HomePageState extends State<HomePage> {
       print(
           "Song link from isplaying true::: ${baseUrl}/${storelist![index].file}");
       setState(() {});
+      ////////////////////////////////////////////////
     }
   }
 }
