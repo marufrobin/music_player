@@ -67,12 +67,13 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  int indexOfSong = 0;
+  bool isPlaying = false;
   @override
   Widget build(BuildContext context) {
     String baseUrl = "https://ayat-app.com/public";
     double value = 0;
-    int indexOfSong = 0;
-    bool isPlaying = false;
+
     bool isclick = false;
     var height = MediaQuery.of(context).size.height;
     var weight = MediaQuery.of(context).size.width;
@@ -165,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                                                   "Data for photo--------${storelist![0].coverArt}");
                                             },
                                             icon: Icon(
-                                              Icons.arrow_back,
+                                              Icons.skip_previous_rounded,
                                               size: 20,
                                               color: Colors.black,
                                             )))),
@@ -236,12 +237,39 @@ class _HomePageState extends State<HomePage> {
                                         color: Colors.teal),
                                     child: Center(
                                         child: IconButton(
-                                            onPressed: () {
+                                            onPressed: () async {
                                               print(
-                                                  "data ofr index----${storelist![0].name}");
+                                                  "Indesssssssssssssssssssssssssss:: ${indexOfSong}");
+                                              indexOfSong = indexOfSong + 1;
+                                              // setState(() {});
+                                              audioPlayer.pause();
+
+                                              print(
+                                                  "Indesssssssssssssssssssssssssss:: ${indexOfSong}");
+                                              print(
+                                                  "is PLayinggggggggg:::::${isPlaying}");
+                                              if (isPlaying == false) {
+                                                isPlaying = true;
+                                                await audioPlayer.play(UrlSource(
+                                                    "${baseUrl}/${storelist![indexOfSong].file}"));
+
+                                                print(
+                                                    "Song link from isplaying true::: ${baseUrl}/${storelist![indexOfSong].file}");
+                                                setState(() {});
+                                              } else if (isPlaying == true) {
+                                                isPlaying = true;
+                                                audioPlayer.stop();
+
+                                                await audioPlayer.play(UrlSource(
+                                                    "${baseUrl}/${storelist![indexOfSong].file}"));
+                                                print(
+                                                    "Song link from isplaying false::: ${baseUrl}/${storelist![indexOfSong].file}");
+                                                setState(() {});
+                                              }
+                                              setState(() {});
                                             },
                                             icon: Icon(
-                                              Icons.arrow_forward,
+                                              Icons.skip_next_rounded,
                                               size: 20,
                                               color: Colors.black,
                                             ))))
@@ -267,31 +295,37 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () async {
+                              indexOfSong = index;
+                              print("Indexxxxxxxxxxxxxx:::: ${index}");
+                              print(
+                                  "Indeyyyyyyyyyyyyyyyyyyyyy:::: ${indexOfSong}");
+                              setState(() {});
                               audioPlayer.onPositionChanged.listen((position) {
                                 setState(() {
                                   value = position.inSeconds.toDouble();
                                 });
                               });
                               duration = (await audioPlayer.getDuration())!;
-                              // setState(() async {
-                              //   _duration = (await audioPlayer.getDuration())!;
-                              // });
+
                               if (isPlaying == false) {
+                                isPlaying = true;
                                 await audioPlayer.play(UrlSource(
                                     "${baseUrl}/${storelist![index].file}"));
-                                isPlaying = true;
+
                                 print(
-                                    "Song link from isplaying true::: ${baseUrl}/${storelist![index].file}");
+                                    "Song link from isplaying false::: ${baseUrl}/${storelist![index].file}");
+                                setState(() {});
                               } else if (isPlaying == true) {
+                                isPlaying = true;
                                 audioPlayer.stop();
 
                                 await audioPlayer.play(UrlSource(
                                     "${baseUrl}/${storelist![index].file}"));
                                 print(
-                                    "Song link from isplaying false::: ${baseUrl}/${storelist![index].file}");
-                                isPlaying = true;
+                                    "Song link from isplaying true::: ${baseUrl}/${storelist![index].file}");
+                                setState(() {});
                               }
-                              setState(() {});
+
                               print('song index value:${index}');
                               // Navigator.push(
                               //     context,
