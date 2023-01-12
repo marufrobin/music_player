@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     String baseUrl = "https://ayat-app.com/public";
-    double value = 0;
+    Duration value;
 
     bool isclick = false;
     var height = MediaQuery.of(context).size.height;
@@ -128,10 +128,12 @@ class _HomePageState extends State<HomePage> {
                           Container(
                             width: 240,
                             child: Slider(
-                              min: 0,
-                              max: duration.inSeconds.toDouble(),
                               value: postion.inSeconds.toDouble(),
+                              min: 0,
+                              max: duration.inSeconds.toDouble() + 1.0,
                               onChanged: (value) async {
+                                print(
+                                    "posssssssssssssssssssssssssssssssssssssssssss ${postion.inSeconds.toDouble()}");
                                 final position =
                                     Duration(seconds: value.toInt());
                                 await audioPlayer.seek(position);
@@ -161,13 +163,13 @@ class _HomePageState extends State<HomePage> {
                                         color: Colors.teal),
                                     child: Center(
                                         child: IconButton(
+                                            //previous button
                                             onPressed: () {
                                               audioPlayer.onPositionChanged
                                                   .listen((position) {
-                                                setState(() {
-                                                  value = position.inSeconds
-                                                      .toDouble();
-                                                });
+                                                postion = position;
+                                                // print(
+                                                //     "pofdsfngksfdnfbkmsdf   ${postion}");
                                               });
                                               if (indexOfSong == 0) {
                                                 indexOfSong = indexOfSong;
@@ -256,8 +258,7 @@ class _HomePageState extends State<HomePage> {
                                               audioPlayer.onPositionChanged
                                                   .listen((position) {
                                                 setState(() {
-                                                  value = position.inSeconds
-                                                      .toDouble();
+                                                  postion = position;
                                                 });
                                               });
                                               indexOfSong = indexOfSong + 1;
@@ -301,7 +302,7 @@ class _HomePageState extends State<HomePage> {
                               setState(() {});
                               audioPlayer.onPositionChanged.listen((position) {
                                 setState(() {
-                                  value = position.inSeconds.toDouble();
+                                  postion = position;
                                 });
                               });
                               duration = (await audioPlayer.getDuration())!;
