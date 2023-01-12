@@ -131,10 +131,10 @@ class _HomePageState extends State<HomePage> {
                               min: 0,
                               max: duration.inSeconds.toDouble(),
                               value: postion.inSeconds.toDouble(),
-                              onChanged: (value) {
+                              onChanged: (value) async {
                                 final position =
                                     Duration(seconds: value.toInt());
-                                audioPlayer.seek(position);
+                                await audioPlayer.seek(position);
                                 audioPlayer.resume();
                               },
                               activeColor: Colors.white,
@@ -162,6 +162,13 @@ class _HomePageState extends State<HomePage> {
                                     child: Center(
                                         child: IconButton(
                                             onPressed: () {
+                                              audioPlayer.onPositionChanged
+                                                  .listen((position) {
+                                                setState(() {
+                                                  value = position.inSeconds
+                                                      .toDouble();
+                                                });
+                                              });
                                               if (indexOfSong == 0) {
                                                 indexOfSong = indexOfSong;
                                               } else {
@@ -246,16 +253,17 @@ class _HomePageState extends State<HomePage> {
                                     child: Center(
                                         child: IconButton(
                                             onPressed: () async {
-                                              print(
-                                                  "Indesssssssssssssssssssssssssss:: ${indexOfSong}");
+                                              audioPlayer.onPositionChanged
+                                                  .listen((position) {
+                                                setState(() {
+                                                  value = position.inSeconds
+                                                      .toDouble();
+                                                });
+                                              });
                                               indexOfSong = indexOfSong + 1;
-                                              // setState(() {});
+                                              if (indexOfSong ==
+                                                  storelist!.length) {}
                                               audioPlayer.pause();
-
-                                              print(
-                                                  "Indesssssssssssssssssssssssssss:: ${indexOfSong}");
-                                              print(
-                                                  "is PLayinggggggggg:::::${isPlaying}");
                                               playTheSong(index: indexOfSong);
                                               setState(() {});
                                             },
