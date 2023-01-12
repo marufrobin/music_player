@@ -162,8 +162,16 @@ class _HomePageState extends State<HomePage> {
                                     child: Center(
                                         child: IconButton(
                                             onPressed: () {
-                                              print(
-                                                  "Data for photo--------${storelist![0].coverArt}");
+                                              if (indexOfSong == 0) {
+                                                indexOfSong = indexOfSong;
+                                              } else {
+                                                indexOfSong = indexOfSong - 1;
+                                              }
+
+                                              audioPlayer.pause();
+
+                                              playTheSong(index: indexOfSong);
+                                              setState(() {});
                                             },
                                             icon: Icon(
                                               Icons.skip_previous_rounded,
@@ -248,24 +256,7 @@ class _HomePageState extends State<HomePage> {
                                                   "Indesssssssssssssssssssssssssss:: ${indexOfSong}");
                                               print(
                                                   "is PLayinggggggggg:::::${isPlaying}");
-                                              if (isPlaying == false) {
-                                                isPlaying = true;
-                                                await audioPlayer.play(UrlSource(
-                                                    "${baseUrl}/${storelist![indexOfSong].file}"));
-
-                                                print(
-                                                    "Song link from isplaying true::: ${baseUrl}/${storelist![indexOfSong].file}");
-                                                setState(() {});
-                                              } else if (isPlaying == true) {
-                                                isPlaying = true;
-                                                audioPlayer.stop();
-
-                                                await audioPlayer.play(UrlSource(
-                                                    "${baseUrl}/${storelist![indexOfSong].file}"));
-                                                print(
-                                                    "Song link from isplaying false::: ${baseUrl}/${storelist![indexOfSong].file}");
-                                                setState(() {});
-                                              }
+                                              playTheSong(index: indexOfSong);
                                               setState(() {});
                                             },
                                             icon: Icon(
@@ -306,26 +297,7 @@ class _HomePageState extends State<HomePage> {
                                 });
                               });
                               duration = (await audioPlayer.getDuration())!;
-
-                              if (isPlaying == false) {
-                                isPlaying = true;
-                                await audioPlayer.play(UrlSource(
-                                    "${baseUrl}/${storelist![index].file}"));
-
-                                print(
-                                    "Song link from isplaying false::: ${baseUrl}/${storelist![index].file}");
-                                setState(() {});
-                              } else if (isPlaying == true) {
-                                isPlaying = true;
-                                audioPlayer.stop();
-
-                                await audioPlayer.play(UrlSource(
-                                    "${baseUrl}/${storelist![index].file}"));
-                                print(
-                                    "Song link from isplaying true::: ${baseUrl}/${storelist![index].file}");
-                                setState(() {});
-                              }
-
+                              playTheSong(index: index);
                               print('song index value:${index}');
                               // Navigator.push(
                               //     context,
@@ -392,5 +364,26 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  playTheSong({required int index}) async {
+    String baseUrl = "https://ayat-app.com/public";
+
+    if (isPlaying == false) {
+      isPlaying = true;
+      await audioPlayer.play(UrlSource("${baseUrl}/${storelist![index].file}"));
+
+      print(
+          "Song link from isplaying false::: ${baseUrl}/${storelist![index].file}");
+      setState(() {});
+    } else if (isPlaying == true) {
+      isPlaying = true;
+      audioPlayer.stop();
+
+      await audioPlayer.play(UrlSource("${baseUrl}/${storelist![index].file}"));
+      print(
+          "Song link from isplaying true::: ${baseUrl}/${storelist![index].file}");
+      setState(() {});
+    }
   }
 }
