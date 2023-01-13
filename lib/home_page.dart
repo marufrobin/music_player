@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:music_player/new_page.dart';
 
 import 'modelpage.dart';
 
@@ -105,6 +106,10 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.transparent,
           leading: GestureDetector(
               onTap: () {}, child: Icon(Icons.arrow_back_ios_new)),
+          actions: [IconButton(onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) =>NewPageDemo()
+            ));
+          }, icon: Icon(Icons.next_week_rounded,color: Colors.red,))],
         ),
         backgroundColor: Color(0xfffDCEDC8),
         body: SingleChildScrollView(
