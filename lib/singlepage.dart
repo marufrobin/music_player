@@ -219,7 +219,7 @@ class _NextsinglepageState extends State<Nextsinglepage> {
                                           },
                                           icon: Icon(
                                             Icons.arrow_forward,
-                                            size: 20,
+                                            size: 60,
                                             color: Colors.black,
                                           ))))
                             ],

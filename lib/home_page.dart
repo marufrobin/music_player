@@ -68,13 +68,34 @@ class _HomePageState extends State<HomePage> {
   }
 
   int indexOfSong = 0;
-  bool isPlaying = false;
+
   @override
   Widget build(BuildContext context) {
     String baseUrl = "https://ayat-app.com/public";
     Duration value;
-
+    bool isPlaying = false;
     bool isclick = false;
+    playTheSong({required int index}) async {
+      String baseUrl = "https://ayat-app.com/public";
+
+      if (isPlaying == false) {
+        isPlaying = true;
+        await audioPlayer.play(UrlSource("${baseUrl}/${storelist![index].file}"));
+
+        print(
+            "Song link from isplaying false::: ${baseUrl}/${storelist![index].file}");
+        setState(() {});
+      } else if (isPlaying == true) {
+        isPlaying = true;
+        audioPlayer.stop();
+
+        await audioPlayer.play(UrlSource("${baseUrl}/${storelist![index].file}"));
+        print(
+            "Song link from isplaying true::: ${baseUrl}/${storelist![index].file}");
+        setState(() {});
+        ////////////////////////////////////////////////
+      }
+    }
     var height = MediaQuery.of(context).size.height;
     var weight = MediaQuery.of(context).size.width;
     return SafeArea(
@@ -373,27 +394,8 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+
   }
 
-  playTheSong({required int index}) async {
-    String baseUrl = "https://ayat-app.com/public";
 
-    if (isPlaying == false) {
-      isPlaying = true;
-      await audioPlayer.play(UrlSource("${baseUrl}/${storelist![index].file}"));
-
-      print(
-          "Song link from isplaying false::: ${baseUrl}/${storelist![index].file}");
-      setState(() {});
-    } else if (isPlaying == true) {
-      isPlaying = true;
-      audioPlayer.stop();
-
-      await audioPlayer.play(UrlSource("${baseUrl}/${storelist![index].file}"));
-      print(
-          "Song link from isplaying true::: ${baseUrl}/${storelist![index].file}");
-      setState(() {});
-      ////////////////////////////////////////////////
-    }
-  }
 }
