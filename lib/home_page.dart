@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:music_player/new_page.dart';
+import 'package:music_player/page_22.dart';
 
 import 'modelpage.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
-
+  HomePage({required this.audioPlayer});
+  AudioPlayer audioPlayer;
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
     "https://www2.cs.uic.edu/~i101/SoundFiles/BabyElephantWalk60.wav"
         "https://ayat-app.com/public/uploads/all/Xtdm4MdXtJVf5feL7rS5yquq18mnpceOEMPpJvGb.mp3"
   ];
-  AudioPlayer audioPlayer = AudioPlayer();
+
   Duration duration = Duration();
   Duration postion = Duration();
   String url =
@@ -49,23 +49,17 @@ class _HomePageState extends State<HomePage> {
     dataFetch();
     // TODO: implement initState
     super.initState();
-    audioPlayer.onDurationChanged.listen((event) {
+    widget.audioPlayer.onDurationChanged.listen((event) {
       setState(() {
         duration = event;
       });
     });
-    audioPlayer.onPositionChanged.listen((event) {
+    widget.audioPlayer.onPositionChanged.listen((event) {
       setState(() {
         postion = event;
       });
     });
-    audioPlayer.setSourceUrl(url);
-
-    this.audioPlayer.onDurationChanged.listen((d) {
-      setState(() {
-        duration = d;
-      });
-    });
+    widget.audioPlayer.setSourceUrl(url);
   }
 
   int indexOfSong = 0;
@@ -81,22 +75,25 @@ class _HomePageState extends State<HomePage> {
 
       if (isPlaying == false) {
         isPlaying = true;
-        await audioPlayer.play(UrlSource("${baseUrl}/${storelist![index].file}"));
+        await widget.audioPlayer
+            .play(UrlSource("${baseUrl}/${storelist![index].file}"));
 
         print(
             "Song link from isplaying false::: ${baseUrl}/${storelist![index].file}");
         setState(() {});
       } else if (isPlaying == true) {
         isPlaying = true;
-        audioPlayer.stop();
+        widget.audioPlayer.stop();
 
-        await audioPlayer.play(UrlSource("${baseUrl}/${storelist![index].file}"));
+        await widget.audioPlayer
+            .play(UrlSource("${baseUrl}/${storelist![index].file}"));
         print(
             "Song link from isplaying true::: ${baseUrl}/${storelist![index].file}");
         setState(() {});
         ////////////////////////////////////////////////
       }
     }
+
     var height = MediaQuery.of(context).size.height;
     var weight = MediaQuery.of(context).size.width;
     return SafeArea(
@@ -105,11 +102,25 @@ class _HomePageState extends State<HomePage> {
           elevation: 0,
           backgroundColor: Colors.transparent,
           leading: GestureDetector(
-              onTap: () {}, child: Icon(Icons.arrow_back_ios_new)),
-          actions: [IconButton(onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) =>NewPageDemo()
-            ));
-          }, icon: Icon(Icons.next_week_rounded,color: Colors.red,))],
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(Icons.arrow_back_ios_new)),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            Page22(audioPlayer: widget.audioPlayer),
+                      ));
+                },
+                icon: Icon(
+                  Icons.next_week_rounded,
+                  color: Colors.red,
+                ))
+          ],
         ),
         backgroundColor: Color(0xfffDCEDC8),
         body: SingleChildScrollView(
@@ -156,14 +167,17 @@ class _HomePageState extends State<HomePage> {
                             child: Slider(
                               value: postion.inSeconds.toDouble(),
                               min: 0,
-                              max: duration.inSeconds.toDouble() + 1.0,
+                              max: duration.inSeconds.toDouble(),
                               onChanged: (value) async {
                                 print(
                                     "posssssssssssssssssssssssssssssssssssssssssss ${postion.inSeconds.toDouble()}");
-                                final position =
-                                    Duration(seconds: value.toInt());
-                                await audioPlayer.seek(position);
-                                audioPlayer.resume();
+                                setState(() async {
+                                  final position =
+                                      Duration(seconds: value.toInt());
+                                  await widget.audioPlayer.seek(position);
+                                  widget.audioPlayer.resume();
+                                  value = value;
+                                });
                               },
                               activeColor: Colors.white,
                             ),
@@ -191,7 +205,8 @@ class _HomePageState extends State<HomePage> {
                                         child: IconButton(
                                             //previous button
                                             onPressed: () {
-                                              audioPlayer.onPositionChanged
+                                              widget
+                                                  .audioPlayer.onPositionChanged
                                                   .listen((position) {
                                                 postion = position;
                                                 // print(
@@ -203,7 +218,7 @@ class _HomePageState extends State<HomePage> {
                                                 indexOfSong = indexOfSong - 1;
                                               }
 
-                                              audioPlayer.pause();
+                                              widget.audioPlayer.pause();
 
                                               playTheSong(index: indexOfSong);
                                               setState(() {});
@@ -224,7 +239,7 @@ class _HomePageState extends State<HomePage> {
                                         //Resume button
                                         child: IconButton(
                                             onPressed: () async {
-                                              audioPlayer.resume();
+                                              widget.audioPlayer.resume();
                                             },
                                             icon: const Icon(
                                               Icons.play_arrow,
@@ -240,7 +255,7 @@ class _HomePageState extends State<HomePage> {
                                         //pluse button
                                         child: IconButton(
                                       onPressed: () {
-                                        audioPlayer.pause();
+                                        widget.audioPlayer.pause();
                                       },
                                       icon: Icon(
                                         Icons.pause,
@@ -258,7 +273,7 @@ class _HomePageState extends State<HomePage> {
                                         //stop button
                                         child: IconButton(
                                             onPressed: () async {
-                                              await audioPlayer.stop();
+                                              await widget.audioPlayer.stop();
 
                                               setState(() {
                                                 isclick = !isclick;
@@ -281,7 +296,8 @@ class _HomePageState extends State<HomePage> {
                                     child: Center(
                                         child: IconButton(
                                             onPressed: () async {
-                                              audioPlayer.onPositionChanged
+                                              widget
+                                                  .audioPlayer.onPositionChanged
                                                   .listen((position) {
                                                 setState(() {
                                                   postion = position;
@@ -290,7 +306,7 @@ class _HomePageState extends State<HomePage> {
                                               indexOfSong = indexOfSong + 1;
                                               if (indexOfSong ==
                                                   storelist!.length) {}
-                                              audioPlayer.pause();
+                                              widget.audioPlayer.pause();
                                               playTheSong(index: indexOfSong);
                                               setState(() {});
                                             },
@@ -326,12 +342,14 @@ class _HomePageState extends State<HomePage> {
                               print(
                                   "Indeyyyyyyyyyyyyyyyyyyyyy:::: ${indexOfSong}");
                               setState(() {});
-                              audioPlayer.onPositionChanged.listen((position) {
+                              widget.audioPlayer.onPositionChanged
+                                  .listen((position) {
                                 setState(() {
                                   postion = position;
                                 });
                               });
-                              duration = (await audioPlayer.getDuration())!;
+                              duration =
+                                  (await widget.audioPlayer.getDuration())!;
                               playTheSong(index: index);
                               print('song index value:${index}');
                               // Navigator.push(
@@ -399,8 +417,5 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-
   }
-
-
 }
