@@ -18,6 +18,7 @@ class _NewPageDemoState extends State<NewPageDemo> {
 
   @override
   Widget build(BuildContext context) {
+    String baseUrl = "https://ayat-app.com/public/";
     return Scaffold(
       appBar: AppBar(
         title: Text("Robin"),
@@ -28,6 +29,8 @@ class _NewPageDemoState extends State<NewPageDemo> {
                 MaterialPageRoute(
                   builder: (context) => HomePage(
                     audioPlayer: audioPlayer,
+                    songUrl:
+                        "${baseUrl}uploads/all/Xtdm4MdXtJVf5feL7rS5yquq18mnpceOEMPpJvGb.mp3",
                   ),
                 ),
               );

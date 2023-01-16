@@ -8,7 +8,9 @@ import 'package:music_player/page_22.dart';
 import 'modelpage.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({required this.audioPlayer});
+  HomePage({required this.audioPlayer, required this.songUrl});
+  String songUrl;
+  // String mp3Url = "https://ayat-app.com/public/${songUrl}";
   AudioPlayer audioPlayer;
   @override
   State<HomePage> createState() => _HomePageState();
@@ -41,8 +43,8 @@ class _HomePageState extends State<HomePage> {
 
   Duration duration = Duration();
   Duration postion = Duration();
-  String url =
-      "https://ayat-app.com/public/uploads/all/Xtdm4MdXtJVf5feL7rS5yquq18mnpceOEMPpJvGb.mp3";
+  // String url =
+  //     "${widget.mp3Url}";
 
   @override
   void initState() {
@@ -59,7 +61,7 @@ class _HomePageState extends State<HomePage> {
         postion = event;
       });
     });
-    widget.audioPlayer.setSourceUrl(url);
+    widget.audioPlayer.setSourceUrl(widget.songUrl);
   }
 
   int indexOfSong = 0;
